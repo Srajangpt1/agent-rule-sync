@@ -107,7 +107,7 @@ export function needsUpdate(
  * Generate a filename from category name (using .mdc for Cursor rules)
  */
 export function generateFilename(categoryName: string): string {
-  return `${categoryName.toLowerCase().replace(/\s+/g, '-')}.mdc`;
+  return `${path.basename(categoryName.toLowerCase().replace(/\s+/g, '-'))}.mdc`;
 }
 
 /**
@@ -139,6 +139,7 @@ export function writeRules(
     );
 
     // Process each category
+    const resolvedRulesDir = path.resolve(rulesDir);
     for (const [categoryName, category] of Object.entries(analysisData)) {
       if (!category || !category.rules || category.rules.length === 0) {
         continue;
@@ -146,6 +147,9 @@ export function writeRules(
 
       const filename = generateFilename(categoryName);
       const filePath = path.join(rulesDir, filename);
+      if (!path.resolve(filePath).startsWith(resolvedRulesDir + path.sep)) {
+        continue;
+      }
       const mdc = convertToMDC(categoryName, category);
 
       // Check if file exists
