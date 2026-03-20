@@ -11,7 +11,7 @@ import {
  * Get the .cursor/rules directory path
  */
 export function getRulesDirectory(cwd?: string): string {
-  const baseDir = cwd || process.cwd();
+  const baseDir = path.resolve(cwd || process.cwd());
   return path.join(baseDir, '.cursor', 'rules');
 }
 
